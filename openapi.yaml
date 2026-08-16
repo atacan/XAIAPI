@@ -1,375 +1,348 @@
 openapi: 3.1.0
 info:
-  title: xAI Speech-to-Text REST API
-  version: v1
-  description: "OpenAPI definition for the xAI (Grok) Speech-to-Text REST endpoint.\n\
-    \nThe endpoint transcribes an uploaded audio file or an audio file fetched\nfrom\
-    \ a URL. It supports word-level timestamps, speaker diarization,\nmultichannel\
-    \ transcription, key-term biasing, filler-word control, and\ninverse text normalization.\n\
-    \nNotes:\n  - Authentication uses an xAI API key as a Bearer token.\n  - The request\
-    \ body is multipart/form-data.\n  - Exactly one of `file` or `url` should be provided.\n\
-    \  - When using `file`, xAI requires the file part to be sent after the\n    other\
-    \ multipart fields. OpenAPI cannot enforce multipart field order.\n  - `format=true`\
-    \ requires `language`.\n  - For raw/headerless audio (`pcm`, `mulaw`, or `alaw`),\
-    \ provide\n    `audio_format` and `sample_rate`.\n  - The maximum uploaded file\
-    \ size documented by xAI is 500 MB.\n"
-  contact:
-    name: xAI
-    url: https://x.ai/
+    title: xAI Speech-to-Text REST API
+    version: v1
+    description: "OpenAPI definition for the xAI (Grok) Speech-to-Text REST endpoint.\n\nThe endpoint transcribes an uploaded audio file or an audio file fetched\nfrom a URL. It supports word-level timestamps, speaker diarization,\nmultichannel transcription, key-term biasing, filler-word control, and\ninverse text normalization.\n\nNotes:\n  - Authentication uses an xAI API key as a Bearer token.\n  - The request body is multipart/form-data.\n  - Exactly one of `file` or `url` should be provided.\n  - When using `file`, xAI requires the file part to be sent after the\n    other multipart fields. OpenAPI cannot enforce multipart field order.\n  - `format=true` requires `language`.\n  - For raw/headerless audio (`pcm`, `mulaw`, or `alaw`), provide\n    `audio_format` and `sample_rate`.\n  - The maximum uploaded file size documented by xAI is 500 MB.\n"
+    contact:
+        name: xAI
+        url: https://x.ai/
 externalDocs:
-  description: xAI Speech-to-Text documentation
-  url: https://docs.x.ai/developers/model-capabilities/audio/speech-to-text
+    description: xAI Speech-to-Text documentation
+    url: https://docs.x.ai/developers/model-capabilities/audio/speech-to-text
 servers:
-- url: https://api.x.ai
-  description: xAI Inference API
+    - url: https://api.x.ai
+      description: xAI Inference API
 tags:
-- name: Speech to Text
-  description: Transcribe audio to text.
+    - name: Speech to Text
+      description: Transcribe audio to text.
 security:
-- bearerAuth: []
+    - bearerAuth: []
 paths:
-  /v1/stt:
-    post:
-      tags:
-      - Speech to Text
-      operationId: transcribeSpeech
-      summary: Transcribe speech to text
-      description: 'Transcribes audio supplied either as a multipart file upload or
-        by URL.
+    /v1/stt:
+        post:
+            tags:
+                - Speech to Text
+            operationId: transcribeSpeech
+            summary: Transcribe speech to text
+            description: 'Transcribes audio supplied either as a multipart file upload or by URL.
 
 
-        For multipart uploads, send all option fields before the `file` field.
+                For multipart uploads, send all option fields before the `file` field.
 
-        For text formatting / inverse text normalization, set `format=true`
+                For text formatting / inverse text normalization, set `format=true`
 
-        together with a supported `language`.
+                together with a supported `language`.
 
-        '
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/SpeechToTextRequest'
-            encoding:
-              keyterm:
-                style: form
-                explode: true
-            examples:
-              byUrl:
-                summary: Transcribe an audio file by URL
-                value:
-                  url: https://example.com/audio.mp3
-                  language: en
-                  format: true
-                  keyterm:
-                  - Understand The Universe
-      responses:
-        '200':
-          description: Successful transcription.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpeechToTextResponse'
-              examples:
-                transcription:
-                  summary: Example transcription
-                  value:
-                    text: The balance is $167,983.15.
-                    language: en
-                    duration: 3.45
-                    words:
-                    - text: The
-                      start: 0.24
-                      end: 0.48
-                    - text: balance
-                      start: 0.48
-                      end: 0.96
-                    - text: is
-                      start: 0.96
-                      end: 1.12
-                    - text: $167,983.15.
-                      start: 1.12
-                      end: 3.2
-        '400':
-          description: Bad request, such as an invalid argument.
-        '401':
-          description: Missing or invalid authentication token.
-        '403':
-          description: The API key or team does not have permission to perform the
-            request.
-        '415':
-          description: Unsupported media type or invalid request content type.
-        '422':
-          description: A request field has an invalid format or value.
-        '429':
-          description: Rate limit exceeded.
-        default:
-          description: Unexpected xAI API error.
+'
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/SpeechToTextRequest'
+                        encoding:
+                            keyterm:
+                                style: form
+                                explode: true
+                        examples:
+                            byUrl:
+                                summary: Transcribe an audio file by URL
+                                value:
+                                    url: https://example.com/audio.mp3
+                                    language: en
+                                    format: true
+                                    keyterm:
+                                        - Understand The Universe
+            responses:
+                '200':
+                    description: Successful transcription.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SpeechToTextResponse'
+                            examples:
+                                transcription:
+                                    summary: Example transcription
+                                    value:
+                                        text: The balance is $167,983.15.
+                                        language: en
+                                        duration: 3.45
+                                        words:
+                                            - text: The
+                                              start: 0.24
+                                              end: 0.48
+                                            - text: balance
+                                              start: 0.48
+                                              end: 0.96
+                                            - text: is
+                                              start: 0.96
+                                              end: 1.12
+                                            - text: $167,983.15.
+                                              start: 1.12
+                                              end: 3.2
+                '400':
+                    description: Bad request, such as an invalid argument.
+                '401':
+                    description: Missing or invalid authentication token.
+                '403':
+                    description: The API key or team does not have permission to perform the request.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                            examples:
+                                forbidden:
+                                    summary: Example forbidden error
+                                    value:
+                                        code: forbidden
+                                        error: The API key or team does not have permission to perform the request.
+                '415':
+                    description: Unsupported media type or invalid request content type.
+                '422':
+                    description: A request field has an invalid format or value.
+                '429':
+                    description: Rate limit exceeded.
+                default:
+                    description: Unexpected xAI API error.
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: xAI API key
-      description: 'Supply the xAI API key in the Authorization header:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: xAI API key
+            description: 'Supply the xAI API key in the Authorization header:
 
-        `Authorization: Bearer <your xAI API key>`.
+                `Authorization: Bearer <your xAI API key>`.
 
-        '
-  schemas:
-    SpeechToTextRequest:
-      type: object
-      additionalProperties: false
-      description: 'Multipart form fields for speech-to-text. Exactly one of `file`
-        or
+'
+    schemas:
+        ErrorResponse:
+            type: object
+            additionalProperties: true
+            description: 'Error payload returned by the xAI API for failed requests.
 
-        `url` should be supplied.
+                Intended for reuse across 4xx error responses.
 
-        '
-      properties:
-        file:
-          type: string
-          format: binary
-          description: 'Audio file to transcribe. Maximum size: 500 MB.
+'
+            required:
+                - code
+                - error
+            properties:
+                code:
+                    type: string
+                    description: Machine-readable error code identifying the error category.
+                error:
+                    type: string
+                    description: Human-readable error message describing the failure.
+        SpeechToTextResponse:
+            type: object
+            additionalProperties: true
+            required:
+                - text
+                - language
+                - duration
+            properties:
+                text:
+                    type: string
+                    description: 'Full transcript text. For multichannel requests, this is the
 
-            Supported container formats include WAV, MP3, OGG, Opus, FLAC,
+                        merged transcript across all channels, interleaved by timestamp.
 
-            AAC, MP4, M4A, and MKV. Raw/headerless audio is also supported
+'
+                language:
+                    type: string
+                    description: Detected language as a BCP-47 code, for example `en` or `es-mx`.
+                    examples:
+                        - en
+                duration:
+                    type: number
+                    minimum: 0
+                    description: Audio duration in seconds, rounded to two decimal places.
+                words:
+                    type: array
+                    description: Word-level segments with timestamps. May be omitted when empty.
+                    items:
+                        $ref: '#/components/schemas/TranscriptionWord'
+                channels:
+                    type: array
+                    description: 'Per-channel transcripts. Present when `multichannel=true` and
 
-            when `audio_format` and `sample_rate` are supplied.
+                        omitted for single-channel audio.
 
+'
+                    items:
+                        $ref: '#/components/schemas/ChannelTranscript'
+        TranscriptionWord:
+            type: object
+            additionalProperties: true
+            required:
+                - text
+                - start
+                - end
+            properties:
+                text:
+                    type: string
+                    description: Transcribed word or token.
+                start:
+                    type: number
+                    minimum: 0
+                    description: Start time in seconds.
+                end:
+                    type: number
+                    minimum: 0
+                    description: End time in seconds.
+                speaker:
+                    type: integer
+                    minimum: 0
+                    description: 'Detected speaker identifier. Present when speaker diarization is enabled.
 
-            This field must be sent after all other multipart form fields.
+'
+                confidence:
+                    type: number
+                    minimum: 0
+                    maximum: 1
+                    description: 'Confidence score. This field is shown in xAI''s REST response example
 
-            '
-        url:
-          type: string
-          format: uri
-          description: URL of an audio file for xAI to download and transcribe server-side.
-        audio_format:
-          type: string
-          enum:
-          - pcm
-          - mulaw
-          - alaw
-          description: 'Format hint for raw/headerless audio only.
+                        and is modeled as optional because the response field table does not
 
-            Do not set this for container formats such as MP3 or WAV.
+                        state that it is always present.
 
-            '
-        sample_rate:
-          type: integer
-          enum:
-          - 8000
-          - 16000
-          - 22050
-          - 24000
-          - 44100
-          - 48000
-          description: 'Sample rate in Hz. Required for raw/headerless audio using
-
-            `audio_format`.
-
-            '
-        language:
-          $ref: '#/components/schemas/SpeechToTextLanguage'
-        format:
-          type: boolean
-          default: false
-          description: 'Enables inverse text normalization, converting spoken numbers,
-
-            currencies, and units into written form. Requires `language`.
-
-            '
-        multichannel:
-          type: boolean
-          default: false
-          description: 'When true, transcribes each audio channel independently and
-
-            returns per-channel transcripts in `channels`.
-
-            '
-        channels:
-          type: integer
-          minimum: 2
-          maximum: 8
-          description: 'Number of audio channels. Required for multichannel raw audio.
-
-            Container formats can be auto-detected.
-
-            '
-        diarize:
-          type: boolean
-          default: false
-          description: 'Enables speaker diarization. When enabled, words may include
-            a
-
-            `speaker` integer identifying the detected speaker.
-
-            '
-        keyterm:
-          type: array
-          maxItems: 100
-          description: 'Terms that bias transcription toward specific names, product
-
-            names, or proper nouns. xAI accepts this multipart field
-
-            repeatedly. Maximum 100 terms.
-
-            '
-          items:
+'
+        ChannelTranscript:
+            type: object
+            additionalProperties: true
+            required:
+                - index
+                - text
+            properties:
+                index:
+                    type: integer
+                    minimum: 0
+                    description: Zero-based audio channel index.
+                text:
+                    type: string
+                    description: Transcript text for this channel.
+                words:
+                    type: array
+                    description: Word-level segments for this channel.
+                    items:
+                        $ref: '#/components/schemas/TranscriptionWord'
+        SpeechToTextLanguage:
             type: string
-            maxLength: 50
-        filler_words:
-          type: boolean
-          default: false
-          description: 'When true, filler words such as "uh", "um", and "er" are retained.
+            enum:
+                - ar
+                - cs
+                - da
+                - nl
+                - en
+                - fil
+                - fr
+                - de
+                - hi
+                - id
+                - it
+                - ja
+                - ko
+                - mk
+                - ms
+                - fa
+                - pl
+                - pt
+                - ro
+                - ru
+                - es
+                - sv
+                - th
+                - tr
+                - vi
+            description: Language code used for text formatting. When `format=true`, this field is required. The listed languages are those documented by xAI for formatting support.
+        SpeechToTextRequest:
+            type: object
+            additionalProperties: false
+            description: 'Multipart form fields for speech-to-text. Exactly one of `file` or `url` should be supplied.
 
-            By default they are removed from the transcript and word array.
+'
+            properties:
+                url:
+                    type: string
+                    format: uri
+                    description: URL of an audio file for xAI to download and transcribe server-side.
+                audio_format:
+                    type: string
+                    enum:
+                        - pcm
+                        - mulaw
+                        - alaw
+                    description: 'Format hint for raw/headerless audio only.
 
-            '
-        vad_threshold:
-          type: number
-          minimum: 0
-          maximum: 1
-          default: 0.5
-          description: 'Speech-probability threshold for the voice-activity gate.
+                        Do not set this for container formats such as MP3 or WAV.
 
-            Segments below the threshold are treated as non-speech.
+'
+                sample_rate:
+                    type: integer
+                    enum:
+                        - 8000
+                        - 16000
+                        - 22050
+                        - 24000
+                        - 44100
+                        - 48000
+                    description: 'Sample rate in Hz. Required for raw/headerless audio using `audio_format`.
 
-            Set to 0 to disable the gate.
+'
+                language:
+                    $ref: '#/components/schemas/SpeechToTextLanguage'
+                format:
+                    type: boolean
+                    default: false
+                    description: 'Enables inverse text normalization, converting spoken numbers, currencies, and units into written form. Requires `language`.
 
-            '
-      oneOf:
-      - title: File upload
-        not: {}
-      - title: Audio URL
-        not: {}
-    SpeechToTextResponse:
-      type: object
-      additionalProperties: true
-      required:
-      - text
-      - language
-      - duration
-      properties:
-        text:
-          type: string
-          description: 'Full transcript text. For multichannel requests, this is the
+'
+                multichannel:
+                    type: boolean
+                    default: false
+                    description: 'When true, transcribes each audio channel independently and returns per-channel transcripts in `channels`.
 
-            merged transcript across all channels, interleaved by timestamp.
+'
+                channels:
+                    type: integer
+                    minimum: 2
+                    maximum: 8
+                    description: 'Number of audio channels. Required for multichannel raw audio. Container formats can be auto-detected.
 
-            '
-        language:
-          type: string
-          description: Detected language as a BCP-47 code, for example `en` or `es-mx`.
-          examples:
-          - en
-        duration:
-          type: number
-          minimum: 0
-          description: Audio duration in seconds, rounded to two decimal places.
-        words:
-          type: array
-          description: Word-level segments with timestamps. May be omitted when empty.
-          items:
-            $ref: '#/components/schemas/TranscriptionWord'
-        channels:
-          type: array
-          description: 'Per-channel transcripts. Present when `multichannel=true`
-            and
+'
+                diarize:
+                    type: boolean
+                    default: false
+                    description: 'Enables speaker diarization. When enabled, words may include a `speaker` integer identifying the detected speaker.
 
-            omitted for single-channel audio.
+'
+                keyterm:
+                    type: array
+                    maxItems: 100
+                    description: 'Terms that bias transcription toward specific names, product names, or proper nouns. xAI accepts this multipart field repeatedly. Maximum 100 terms.
 
-            '
-          items:
-            $ref: '#/components/schemas/ChannelTranscript'
-    TranscriptionWord:
-      type: object
-      additionalProperties: true
-      required:
-      - text
-      - start
-      - end
-      properties:
-        text:
-          type: string
-          description: Transcribed word or token.
-        start:
-          type: number
-          minimum: 0
-          description: Start time in seconds.
-        end:
-          type: number
-          minimum: 0
-          description: End time in seconds.
-        speaker:
-          type: integer
-          minimum: 0
-          description: 'Detected speaker identifier. Present when speaker diarization
-            is enabled.
+'
+                    items:
+                        type: string
+                        maxLength: 50
+                filler_words:
+                    type: boolean
+                    default: false
+                    description: 'When true, filler words such as "uh", "um", and "er" are retained. By default they are removed from the transcript and word array.
 
-            '
-        confidence:
-          type: number
-          minimum: 0
-          maximum: 1
-          description: 'Confidence score. This field is shown in xAI''s REST response
-            example
+'
+                vad_threshold:
+                    type: number
+                    minimum: 0
+                    maximum: 1
+                    default: 0.5
+                    description: 'Speech-probability threshold for the voice-activity gate. Segments below the threshold are treated as non-speech. Set to 0 to disable the gate.
 
-            and is modeled as optional because the response field table does not
+'
+                file:
+                    type: string
+                    format: binary
+                    description: 'Audio file to transcribe. Maximum size: 500 MB. Supported container formats include WAV, MP3, OGG, Opus, FLAC, AAC, MP4, M4A, and MKV. Raw/headerless audio is also supported when `audio_format` and `sample_rate` are supplied. This field must be sent after all other multipart form fields.
 
-            state that it is always present.
-
-            '
-    ChannelTranscript:
-      type: object
-      additionalProperties: true
-      required:
-      - index
-      - text
-      properties:
-        index:
-          type: integer
-          minimum: 0
-          description: Zero-based audio channel index.
-        text:
-          type: string
-          description: Transcript text for this channel.
-        words:
-          type: array
-          description: Word-level segments for this channel.
-          items:
-            $ref: '#/components/schemas/TranscriptionWord'
-    SpeechToTextLanguage:
-      type: string
-      enum:
-      - ar
-      - cs
-      - da
-      - nl
-      - en
-      - fil
-      - fr
-      - de
-      - hi
-      - id
-      - it
-      - ja
-      - ko
-      - mk
-      - ms
-      - fa
-      - pl
-      - pt
-      - ro
-      - ru
-      - es
-      - sv
-      - th
-      - tr
-      - vi
-      description: Language code used for text formatting. When `format=true`, this
-        field is required. The listed languages are those documented by xAI for formatting
-        support.
+'

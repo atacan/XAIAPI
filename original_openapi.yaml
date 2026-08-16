@@ -86,6 +86,17 @@ paths:
           description: Missing or invalid authentication token.
         '403':
           description: The API key or team does not have permission to perform the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                forbidden:
+                  summary: Example forbidden error
+                  value:
+                    code: forbidden
+                    error: The API key or team does not have permission to perform
+                      the request.
         '415':
           description: Unsupported media type or invalid request content type.
         '422':
@@ -106,6 +117,24 @@ components:
 
         '
   schemas:
+    ErrorResponse:
+      type: object
+      additionalProperties: true
+      description: 'Error payload returned by the xAI API for failed requests.
+
+        Intended for reuse across 4xx error responses.
+
+        '
+      required:
+      - code
+      - error
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code identifying the error category.
+        error:
+          type: string
+          description: Human-readable error message describing the failure.
     SpeechToTextRequest:
       type: object
       additionalProperties: false

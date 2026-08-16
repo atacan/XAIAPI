@@ -38,8 +38,14 @@ extension APIProtocol {
     ///
     /// - Remark: HTTP `POST /v1/stt`.
     /// - Remark: Generated from `#/paths//v1/stt/post(transcribeSpeech)`.
-    public func transcribeSpeech(headers: Operations.transcribeSpeech.Input.Headers = .init()) async throws -> Operations.transcribeSpeech.Output {
-        try await transcribeSpeech(Operations.transcribeSpeech.Input(headers: headers))
+    public func transcribeSpeech(
+        headers: Operations.transcribeSpeech.Input.Headers = .init(),
+        body: Operations.transcribeSpeech.Input.Body
+    ) async throws -> Operations.transcribeSpeech.Output {
+        try await transcribeSpeech(Operations.transcribeSpeech.Input(
+            headers: headers,
+            body: body
+        ))
     }
 }
 
@@ -69,6 +75,69 @@ public enum Servers {
 public enum Components {
     /// Types generated from the `#/components/schemas` section of the OpenAPI document.
     public enum Schemas {
+        /// Error payload returned by the xAI API for failed requests.
+        /// Intended for reuse across 4xx error responses.
+        ///
+        ///
+        /// - Remark: Generated from `#/components/schemas/ErrorResponse`.
+        public struct ErrorResponse: Codable, Hashable, Sendable {
+            /// Machine-readable error code identifying the error category.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ErrorResponse/code`.
+            public var code: Swift.String
+            /// Human-readable error message describing the failure.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ErrorResponse/error`.
+            public var error: Swift.String
+            /// A container of undocumented properties.
+            public var additionalProperties: OpenAPIRuntime.OpenAPIObjectContainer
+            /// Creates a new `ErrorResponse`.
+            ///
+            /// - Parameters:
+            ///   - code: Machine-readable error code identifying the error category.
+            ///   - error: Human-readable error message describing the failure.
+            ///   - additionalProperties: A container of undocumented properties.
+            public init(
+                code: Swift.String,
+                error: Swift.String,
+                additionalProperties: OpenAPIRuntime.OpenAPIObjectContainer = .init()
+            ) {
+                self.code = code
+                self.error = error
+                self.additionalProperties = additionalProperties
+            }
+            public enum CodingKeys: String, CodingKey {
+                case code
+                case error
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.code = try container.decode(
+                    Swift.String.self,
+                    forKey: .code
+                )
+                self.error = try container.decode(
+                    Swift.String.self,
+                    forKey: .error
+                )
+                additionalProperties = try decoder.decodeAdditionalProperties(knownKeys: [
+                    "code",
+                    "error"
+                ])
+            }
+            public func encode(to encoder: any Swift.Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                try container.encode(
+                    self.code,
+                    forKey: .code
+                )
+                try container.encode(
+                    self.error,
+                    forKey: .error
+                )
+                try encoder.encodeAdditionalProperties(additionalProperties)
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/SpeechToTextResponse`.
         public struct SpeechToTextResponse: Codable, Hashable, Sendable {
             /// Full transcript text. For multichannel requests, this is the
@@ -403,6 +472,153 @@ public enum Components {
             case tr = "tr"
             case vi = "vi"
         }
+        /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest`.
+        @frozen public enum SpeechToTextRequest: Sendable, Hashable {
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/url`.
+            public struct urlPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `urlPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case url(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.urlPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/audio_format`.
+            public struct audio_formatPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `audio_formatPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case audio_format(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.audio_formatPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/sample_rate`.
+            public struct sample_ratePayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `sample_ratePayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case sample_rate(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.sample_ratePayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/language`.
+            public struct languagePayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `languagePayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case language(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.languagePayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/format`.
+            public struct formatPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `formatPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case format(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.formatPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/multichannel`.
+            public struct multichannelPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `multichannelPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case multichannel(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.multichannelPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/channels`.
+            public struct channelsPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `channelsPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case channels(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.channelsPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/diarize`.
+            public struct diarizePayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `diarizePayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case diarize(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.diarizePayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/keyterm`.
+            public struct keytermPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `keytermPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case keyterm(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.keytermPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/filler_words`.
+            public struct filler_wordsPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `filler_wordsPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case filler_words(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.filler_wordsPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/vad_threshold`.
+            public struct vad_thresholdPayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `vad_thresholdPayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case vad_threshold(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.vad_thresholdPayload>)
+            /// - Remark: Generated from `#/components/schemas/SpeechToTextRequest/file`.
+            public struct filePayload: Sendable, Hashable {
+                public var body: OpenAPIRuntime.HTTPBody
+                /// Creates a new `filePayload`.
+                ///
+                /// - Parameters:
+                ///   - body:
+                public init(body: OpenAPIRuntime.HTTPBody) {
+                    self.body = body
+                }
+            }
+            case file(OpenAPIRuntime.MultipartPart<Components.Schemas.SpeechToTextRequest.filePayload>)
+        }
     }
     /// Types generated from the `#/components/parameters` section of the OpenAPI document.
     public enum Parameters {}
@@ -442,12 +658,170 @@ public enum Operations {
                 }
             }
             public var headers: Operations.transcribeSpeech.Input.Headers
+            /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm`.
+                @frozen public enum multipartFormPayload: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/url`.
+                    public struct urlPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `urlPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case url(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.urlPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/audio_format`.
+                    public struct audio_formatPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `audio_formatPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case audio_format(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.audio_formatPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/sample_rate`.
+                    public struct sample_ratePayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `sample_ratePayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case sample_rate(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.sample_ratePayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/language`.
+                    public struct languagePayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `languagePayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case language(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.languagePayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/format`.
+                    public struct formatPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `formatPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case format(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.formatPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/multichannel`.
+                    public struct multichannelPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `multichannelPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case multichannel(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.multichannelPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/channels`.
+                    public struct channelsPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `channelsPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case channels(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.channelsPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/diarize`.
+                    public struct diarizePayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `diarizePayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case diarize(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.diarizePayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/keyterm`.
+                    public struct keytermPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `keytermPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case keyterm(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.keytermPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/filler_words`.
+                    public struct filler_wordsPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `filler_wordsPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case filler_words(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.filler_wordsPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/vad_threshold`.
+                    public struct vad_thresholdPayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `vad_thresholdPayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case vad_threshold(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.vad_thresholdPayload>)
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/multipartForm/file`.
+                    public struct filePayload: Sendable, Hashable {
+                        public var body: OpenAPIRuntime.HTTPBody
+                        /// Creates a new `filePayload`.
+                        ///
+                        /// - Parameters:
+                        ///   - body:
+                        public init(body: OpenAPIRuntime.HTTPBody) {
+                            self.body = body
+                        }
+                    }
+                    case file(OpenAPIRuntime.MultipartPart<Operations.transcribeSpeech.Input.Body.multipartFormPayload.filePayload>)
+                }
+                /// - Remark: Generated from `#/paths/v1/stt/POST/requestBody/content/multipart\/form-data`.
+                case multipartForm(OpenAPIRuntime.MultipartBody<Operations.transcribeSpeech.Input.Body.multipartFormPayload>)
+            }
+            public var body: Operations.transcribeSpeech.Input.Body
             /// Creates a new `Input`.
             ///
             /// - Parameters:
             ///   - headers:
-            public init(headers: Operations.transcribeSpeech.Input.Headers = .init()) {
+            ///   - body:
+            public init(
+                headers: Operations.transcribeSpeech.Input.Headers = .init(),
+                body: Operations.transcribeSpeech.Input.Body
+            ) {
                 self.headers = headers
+                self.body = body
             }
         }
         @frozen public enum Output: Sendable, Hashable {
@@ -573,8 +947,32 @@ public enum Operations {
                 }
             }
             public struct Forbidden: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v1/stt/POST/responses/403/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/responses/403/content/application\/json`.
+                    case json(Components.Schemas.ErrorResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ErrorResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.transcribeSpeech.Output.Forbidden.Body
                 /// Creates a new `Forbidden`.
-                public init() {}
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.transcribeSpeech.Output.Forbidden.Body) {
+                    self.body = body
+                }
             }
             /// The API key or team does not have permission to perform the request.
             ///
@@ -582,14 +980,6 @@ public enum Operations {
             ///
             /// HTTP response code: `403 forbidden`.
             case forbidden(Operations.transcribeSpeech.Output.Forbidden)
-            /// The API key or team does not have permission to perform the request.
-            ///
-            /// - Remark: Generated from `#/paths//v1/stt/post(transcribeSpeech)/responses/403`.
-            ///
-            /// HTTP response code: `403 forbidden`.
-            public static var forbidden: Self {
-                .forbidden(.init())
-            }
             /// The associated value of the enum case if `self` is `.forbidden`.
             ///
             /// - Throws: An error if `self` is not `.forbidden`.

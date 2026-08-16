@@ -6,6 +6,17 @@
 
 import OpenAPIRuntime
 import OpenAPIAsyncHTTPClient
+import XAIAPITypes
 
-// Add your custom client utilities here
-// After code generation, you can add helper functions that use the generated Client
+/// Creates a client configured for the xAI Inference API with bearer token authentication.
+/// - Parameter apiKey: The xAI API key sent as a Bearer token.
+/// - Returns: A configured `Client` ready to perform API operations.
+public func createClient(apiKey: String) throws -> Client {
+    Client(
+        serverURL: try Servers.Server1.url(),
+        transport: AsyncHTTPClientTransport(
+            configuration: .init(timeout: .minutes(10))
+        ),
+        middlewares: [AuthenticationMiddleware(apiKey: apiKey)]
+    )
+}
