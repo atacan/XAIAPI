@@ -1,5 +1,6 @@
 import Testing
 import XAIAPI
+import XAIAPIAsyncHTTPClient
 import XAIAPITypes
 import OpenAPIRuntime
 import UsefulThings
