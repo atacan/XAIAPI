@@ -3,15 +3,16 @@ import XAIAPI
 import XAIAPIAsyncHTTPClient
 import XAIAPITypes
 import OpenAPIRuntime
-import UsefulThings
 #if os(Linux)
 @preconcurrency import struct Foundation.URL
 @preconcurrency import struct Foundation.Data
 @preconcurrency import class Foundation.FileManager
+@preconcurrency import class Foundation.ProcessInfo
 #else
 import struct Foundation.URL
 import struct Foundation.Data
 import class Foundation.FileManager
+import class Foundation.ProcessInfo
 #endif
 
 struct XAIAPITests {
@@ -24,7 +25,7 @@ struct XAIAPITests {
 
     static func makeClient() throws -> Client {
         guard
-            let apiKey = getEnvironmentVariable("XAI_API_KEY", from: repoRoot.appendingPathComponent(".env")),
+            let apiKey = ProcessInfo.processInfo.environment["XAI_API_KEY"],
             !apiKey.isEmpty
         else {
             throw XAIAPITestsError.missingAPIKey
@@ -38,7 +39,7 @@ struct XAIAPITests {
         var description: String {
             switch self {
             case .missingAPIKey:
-                "Set XAI_API_KEY in the environment (e.g. via direnv) or in a .env file at the repository root."
+                "Set XAI_API_KEY in the process environment (e.g. via direnv)."
             }
         }
     }
@@ -107,7 +108,7 @@ struct XAIAPITests {
 
     static var hasAPIKey: Bool {
         guard
-            let apiKey = getEnvironmentVariable("XAI_API_KEY", from: repoRoot.appendingPathComponent(".env")),
+            let apiKey = ProcessInfo.processInfo.environment["XAI_API_KEY"],
             !apiKey.isEmpty
         else { return false }
         return true

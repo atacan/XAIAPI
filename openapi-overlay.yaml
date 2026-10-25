@@ -40,3 +40,18 @@ info:
 #   # Remove a deprecated field
 #   - target: "$.components.schemas.LegacyModel.properties.oldField"
 #     remove: true
+
+# Live HTTP 400 captures include error-only objects; code is not always present.
+actions:
+  - target: "$.components.schemas.ErrorResponse.required"
+    remove: true
+  - target: "$.components.schemas.ErrorResponse"
+    update:
+      required:
+        - error
+  - target: "$.paths['/v1/stt'].post.responses['400']"
+    update:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

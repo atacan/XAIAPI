@@ -84,7 +84,7 @@ public enum Components {
             /// Machine-readable error code identifying the error category.
             ///
             /// - Remark: Generated from `#/components/schemas/ErrorResponse/code`.
-            public var code: Swift.String
+            public var code: Swift.String?
             /// Human-readable error message describing the failure.
             ///
             /// - Remark: Generated from `#/components/schemas/ErrorResponse/error`.
@@ -98,7 +98,7 @@ public enum Components {
             ///   - error: Human-readable error message describing the failure.
             ///   - additionalProperties: A container of undocumented properties.
             public init(
-                code: Swift.String,
+                code: Swift.String? = nil,
                 error: Swift.String,
                 additionalProperties: OpenAPIRuntime.OpenAPIObjectContainer = .init()
             ) {
@@ -112,7 +112,7 @@ public enum Components {
             }
             public init(from decoder: any Swift.Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.code = try container.decode(
+                self.code = try container.decodeIfPresent(
                     Swift.String.self,
                     forKey: .code
                 )
@@ -127,7 +127,7 @@ public enum Components {
             }
             public func encode(to encoder: any Swift.Encoder) throws {
                 var container = encoder.container(keyedBy: CodingKeys.self)
-                try container.encode(
+                try container.encodeIfPresent(
                     self.code,
                     forKey: .code
                 )
@@ -877,8 +877,32 @@ public enum Operations {
                 }
             }
             public struct BadRequest: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/v1/stt/POST/responses/400/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/v1/stt/POST/responses/400/content/application\/json`.
+                    case json(Components.Schemas.ErrorResponse)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ErrorResponse {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.transcribeSpeech.Output.BadRequest.Body
                 /// Creates a new `BadRequest`.
-                public init() {}
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.transcribeSpeech.Output.BadRequest.Body) {
+                    self.body = body
+                }
             }
             /// Bad request, such as an invalid argument.
             ///
@@ -886,14 +910,6 @@ public enum Operations {
             ///
             /// HTTP response code: `400 badRequest`.
             case badRequest(Operations.transcribeSpeech.Output.BadRequest)
-            /// Bad request, such as an invalid argument.
-            ///
-            /// - Remark: Generated from `#/paths//v1/stt/post(transcribeSpeech)/responses/400`.
-            ///
-            /// HTTP response code: `400 badRequest`.
-            public static var badRequest: Self {
-                .badRequest(.init())
-            }
             /// The associated value of the enum case if `self` is `.badRequest`.
             ///
             /// - Throws: An error if `self` is not `.badRequest`.

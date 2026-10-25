@@ -14,8 +14,8 @@ operation security metadata directly.
 
 Use the two factory examples in README.md. The AsyncHTTPClient factory and
 createClient(apiKey:) helper retain a ten-minute timeout. The provider helper is
-in the AsyncHTTPClient target. Preserve UsefulThings and existing transcription
-tests when editing the manifest.
+in the AsyncHTTPClient target. Preserve existing transcription tests when editing
+the manifest. Read live-test credentials from ProcessInfo; keep dependencies version-based for SwiftPM releases.
 
 Validate offline explicitly:
 
@@ -25,7 +25,7 @@ swift test --filter 'URLSessionFactoryTests|AsyncHTTPClientFactoryTests|Authenti
 ```
 
 Do not run the full suite for offline verification: XAIAPITests contains live API
-tests that automatically detect credentials in the environment or .env. Never
+tests that automatically detect credentials in the process environment. Never
 print credentials or include them in test failures.
 
 If response conversion reports `Expected date string to be ISO8601-formatted`,

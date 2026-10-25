@@ -62,8 +62,9 @@ swift test --filter 'URLSessionFactoryTests|AsyncHTTPClientFactoryTests|Authenti
 
 These selected suites use in-memory fixtures and never call the API. The separate
 `XAIAPITests` suite includes live transcription tests that read `XAI_API_KEY` from
-the environment or `.env`; run those only when intended. Keep real credentials
-out of source files and examples.
+the process environment; run those only when intended. Load any local `.env` file
+into your shell first (for example, with direnv). Keep real credentials out of
+source files and examples. The package has no branch-pinned dependencies.
 
 Generated sources and operation security metadata are rewritten on regeneration.
 The manifest, helpers, tests, documentation, and overlay are preserved. Keep manual
@@ -79,3 +80,32 @@ The core and Types targets have no transport dependency. Both transport packages
 remain declared at package level and may still be resolved by SwiftPM or Xcode.
 Run `make help` for other development commands. Dependency source is available in
 `.build/checkouts/`.
+
+Multipart requests must place `file` after all options. Send each key term as a
+separate `keyterm` part, as required by the
+[xAI speech-to-text documentation](https://docs.x.ai/developers/model-capabilities/audio/speech-to-text).
+Live SDK checks on 2026-10-25 confirmed that a remote `url` with two repeated,
+spoken keyterms succeeds with the runtime's original multipart framing. No
+multipart epilogue workaround or alternate keyterm encoding is needed for these
+requests.
+
+HTTP 400 bodies decode through `response.badRequest.body.json`. `ErrorResponse.code`
+is optional: the captured invalid-key response includes it, while invalid audio
+returns only `error`. The remaining 401, 415, 422, 429, and default response body
+shapes are unverified and have not been changed. The invalid key and invalid audio
+checks both returned 400, rather than the 401 and 415 statuses one might expect.
+Raw responses and capture details are in
+[Tests/XAIAPITests/Resources/Responses](Tests/XAIAPITests/Resources/Responses/README.md).
+
+To intentionally repeat the live compatibility captures (API charges may apply):
+
+```bash
+source .envrc
+XAI_CAPTURE_FIXTURES=1 swift test --filter CompatibilityCaptureTests
+```
+
+The capture suite is disabled unless explicitly enabled. It overwrites the named
+fixture bodies and status files. Ordinary offline verification does not send these
+requests. The typed 400 body and optional `code` change public generated types;
+review them when choosing the next semantic version before committing and tagging
+a release.
